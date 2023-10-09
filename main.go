@@ -1,11 +1,20 @@
 package main
-import(
-  "fmt"
-  "net/http"
-  "io"
-  "strings"
-  "golang.org/x/net/html"
+
+import (
+	"fmt"
+	"io"
+	"net/http"
+	"strings"
+
+	"golang.org/x/net/html"
 )
+
+type CatalogItem struct {
+  ItemName string
+  Price int64 
+  ItemCategory string
+  ItemUrl string
+}
 
 func main() {
   url := "https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-05/"
@@ -34,7 +43,24 @@ func parseHTML(rawHTML string){
 	  case "div":
 		for _, a := range token.Attr {
 		  if a.Val == "catalog-inner"{
-			fmt.Printf("Token: %v\n", html.UnescapeString(token.String()))
+			count := 0
+			//loop through child tokens until we find div with class of catalog-list
+
+			fmt.Println(token.Data)
+			for token.Data != "div"{
+			  fmt.Println("Number of divs skipped", count)
+			  tokenType = tokenizer.Next()
+
+			  //skip the blank line
+			  tokenType = tokenizer.Next()
+
+			  token = tokenizer.Token()
+			  fmt.Println("Token", token.Data)
+			  count++
+			}
+
+			fmt.Println("Final Number of divs skipped", count)
+			fmt.Printf("End Of Token: %v\n", html.UnescapeString(token.String()))
 		  }
 		}
 	}
