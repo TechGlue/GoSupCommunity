@@ -5,7 +5,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
-
+	"regexp"
 	"golang.org/x/net/html"
 )
 
@@ -43,29 +43,38 @@ func parseHTML(rawHTML string){
 	  case "div":
 		for _, a := range token.Attr {
 		  if a.Val == "catalog-inner"{
-			count := 0
 			//loop through child tokens until we find div with class of catalog-list
-
-			fmt.Println(token.Data)
-			for token.Data != "div"{
-			  fmt.Println("Number of divs skipped", count)
+			for {
+			  if token.Data == "div"{
+				fmt.Println("Found div")
+			  }
+			  if token.Data == "a"{
+				extracHref(html.UnescapeString(token.String()))
+				break
+			  }
 			  tokenType = tokenizer.Next()
-
-			  //skip the blank line
-			  tokenType = tokenizer.Next()
-
 			  token = tokenizer.Token()
-			  fmt.Println("Token", token.Data)
-			  count++
 			}
-
-			fmt.Println("Final Number of divs skipped", count)
-			fmt.Printf("End Of Token: %v\n", html.UnescapeString(token.String()))
 		  }
 		}
 	}
  }
 }
+
+func extracHref(input string) string {
+  hrefRegex := regexp.MustCompile(`<a\s+[^>]*href="([^"]+)"[^>]*>`)
+  matches := hrefRegex.FindAllStringSubmatch(input, -1)
+
+  // Extract and print href values
+  for _, match := range matches {
+  	if len(match) >= 2 {
+  		href := match[1]
+  		fmt.Println("Href:", href)
+		return href
+  	}
+  }
+  return "ERROR" 
+} 
 
 func fetchHtml(url string) string {
   fmt.Println("Fetching HTML from", url, "\n")
