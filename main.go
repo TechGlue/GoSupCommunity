@@ -4,8 +4,11 @@ import (
         "fmt"
         "io"
         "net/http"
+		"context"
         "strings"
         "golang.org/x/net/html"
+		"github.com/disgoorg/disgo/discord"
+		"github.com/disgoorg/disgo/webhook"
 )
 
 type CatalogItem struct {
@@ -22,10 +25,10 @@ func convertCatalogItemsToJSON(items []CatalogItem) string {
         return "JSON"
 }
 
-func fetchCatalogItems(url string) []CatalogItem {
+func fetchCatalogItems(url string) {
         body := fetchHtml(url)
 		catlogItems := parseHTML(body)
-		return catlogItems
+		dumpToDiscord(catlogItems)
 }
 
 func parseHTML(rawHTML string) []CatalogItem {
@@ -65,8 +68,8 @@ func parseHTML(rawHTML string) []CatalogItem {
                                                                 case "data-itemname":
                                                                         item.ItemName = a.Val
                                                                 }
-                                                                items = append(items, item)
-                                                        }
+                                                      }
+                                                    items = append(items, item)
                                                 }
                                                 tokenType = tokenizer.Next()
                                                 token = tokenizer.Token()
@@ -97,3 +100,28 @@ func fetchHtml(url string) string {
         }
         return "ERROR"
 }
+
+func dumpToDiscord(items []CatalogItem)	{
+  fmt.Println("-------WEBHOOK STARTED-------")
+  client, err := webhook.NewWithURL("https://discord.com/api/webhooks/1145495004354187294/YdKt5wog8g60-RIDARmTKdcYURfRbShidx9QjOKBmUqAjamUvJCxcuc9oHP0c1ytgrtu")
+  if err != nil {
+	fmt.Println(err, "trouble connecting to webhook")
+	return
+  }
+
+  for _, item := range items {
+	var embed []discord.Embed = make([]discord.Embed, 1)
+  	embed[0] = discord.Embed{
+  	  Title:       item.ItemName,
+  	  Description: item.ItemUrl,
+  	}
+  	sendEmbed, err := client.CreateEmbeds(embed) 
+  	if err != nil {
+  	  fmt.Println("error sending webhook: ", err)	
+  	  fmt.Println("Embed", sendEmbed)	
+  	}
+  }
+
+  defer client.Close(context.TODO())
+}
+
