@@ -5,14 +5,12 @@ import (
         "io"
         "net/http"
         "strings"
-
         "golang.org/x/net/html"
 )
 
 type CatalogItem struct {
         ItemId       string
         ItemName     string
-        ItemCategory string
         ItemUrl      string
 }
 
@@ -24,13 +22,12 @@ func convertCatalogItemsToJSON(items []CatalogItem) string {
         return "JSON"
 }
 
-// want this to return a list of catalog items, and be kind of like the main driver
 func fetchCatalogItems(url string) []CatalogItem {
         body := fetchHtml(url)
-        return parseHTML(body)
+		catlogItems := parseHTML(body)
+		return catlogItems
 }
 
-// div catalog-inner is what has the
 func parseHTML(rawHTML string) []CatalogItem {
         var items []CatalogItem
         tokenizer := html.NewTokenizer(strings.NewReader(rawHTML))
@@ -56,9 +53,8 @@ func parseHTML(rawHTML string) []CatalogItem {
                                                 if token.Data == "a" {
                                                         var item CatalogItem
                                                         for _, a := range token.Attr {
-                                                                fmt.Println(a.Key, a.Val)
                                                                 if a.Val == "Go to home" {
-                                                                        fmt.Println("Found the home button, indicating the end of the catalog")
+																		//Found home tag indicating end of catalog items
                                                                         return items
                                                                 }
                                                                 switch a.Key {
@@ -70,7 +66,6 @@ func parseHTML(rawHTML string) []CatalogItem {
                                                                         item.ItemName = a.Val
                                                                 }
                                                                 items = append(items, item)
-                                                                break
                                                         }
                                                 }
                                                 tokenType = tokenizer.Next()
