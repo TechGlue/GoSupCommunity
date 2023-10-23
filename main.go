@@ -1,3 +1,8 @@
+//future features
+//being able to integrate with discord bots aka making a bot command
+//Add a feature to grab images and display to webhook
+//Add a feature to grab the current likes and dislikes of an item
+
 package main
 
 import (
@@ -18,7 +23,7 @@ type CatalogItem struct {
 }
 
 func main() {
-        fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-05/")
+        fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-26/")
 }
 
 func convertCatalogItemsToJSON(items []CatalogItem) string {
