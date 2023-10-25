@@ -8,12 +8,9 @@ package main
 import (
         "fmt"
         "io"
-        "net/http"
-		"context"
         "strings"
         "golang.org/x/net/html"
-		"github.com/disgoorg/disgo/discord"
-		"github.com/disgoorg/disgo/webhook"
+		"net/http"
 )
 
 type CatalogItem struct {
@@ -23,17 +20,19 @@ type CatalogItem struct {
 }
 
 func main() {
-        fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-26/")
-}
+  //start listening
+  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	  fmt.Fprintf(w, "Path: %s!", r.URL.Path[1:])
+  })
 
-func convertCatalogItemsToJSON(items []CatalogItem) string {
-        return "JSON"
+  http.ListenAndServe(":8080", nil)
+  //fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-26/")
 }
 
 func fetchCatalogItems(url string) {
         body := fetchHtml(url)
 		catlogItems := parseHTML(body)
-		dumpToDiscord(catlogItems)
+		DumpToDiscord(catlogItems)
 }
 
 func parseHTML(rawHTML string) []CatalogItem {
@@ -104,29 +103,5 @@ func fetchHtml(url string) string {
                 return string(body)
         }
         return "ERROR"
-}
-
-func dumpToDiscord(items []CatalogItem)	{
-  fmt.Println("-------WEBHOOK STARTED-------")
-  client, err := webhook.NewWithURL("https://discord.com/api/webhooks/1145495004354187294/YdKt5wog8g60-RIDARmTKdcYURfRbShidx9QjOKBmUqAjamUvJCxcuc9oHP0c1ytgrtu")
-  if err != nil {
-	fmt.Println(err, "trouble connecting to webhook")
-	return
-  }
-
-  for _, item := range items {
-	var embed []discord.Embed = make([]discord.Embed, 1)
-  	embed[0] = discord.Embed{
-  	  Title:       item.ItemName,
-  	  Description: item.ItemUrl,
-  	}
-  	sendEmbed, err := client.CreateEmbeds(embed) 
-  	if err != nil {
-  	  fmt.Println("error sending webhook: ", err)	
-  	  fmt.Println("Embed", sendEmbed)	
-  	}
-  }
-
-  defer client.Close(context.TODO())
 }
 
