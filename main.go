@@ -21,6 +21,7 @@ type CatalogItem struct {
 
 func main() {
   //start listening
+  fmt.Println("Starting server on port 8080")
   http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 	  fmt.Fprintf(w, "Path: %s!", r.URL.Path[1:])
   })
