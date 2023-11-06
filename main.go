@@ -6,35 +6,25 @@
 package main
 
 import (
-        "fmt"
-        "io"
-        "strings"
+  		"strings"
         "golang.org/x/net/html"
+		"fmt"
+		"io"
 		"net/http"
 )
 
 type CatalogItem struct {
-        ItemId       string
-        ItemName     string
-        ItemUrl      string
+        ItemId       string `json:"item_id"`
+        ItemName     string `json:"item_name"`
+        ItemUrl      string `json:"item_url"`
 }
+
 
 func main() {
-  //start listening
-  fmt.Println("Starting server on port 8080")
-  http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	  fmt.Fprintf(w, "Path: %s!", r.URL.Path[1:])
-  })
-
-  http.ListenAndServe(":8080", nil)
   //fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-26/")
+  FetchItemsJson()
 }
 
-func fetchCatalogItems(url string) {
-        body := fetchHtml(url)
-		catlogItems := parseHTML(body)
-		DumpToDiscord(catlogItems)
-}
 
 func parseHTML(rawHTML string) []CatalogItem {
         var items []CatalogItem
@@ -90,7 +80,7 @@ func craftURL(suffix string) string {
 }
 
 func fetchHtml(url string) string {
-        fmt.Println("Fetching HTML from", url, "\n")
+        fmt.Println("Fetching HTML from", url)
         resp, err := http.Get(url)
         if err != nil || resp.StatusCode != 200 {
                 fmt.Println("Error: Failed to fetch the HTML from", url)
