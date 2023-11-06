@@ -21,7 +21,6 @@ type CatalogItem struct {
 
 
 func main() {
-  //fetchCatalogItems("https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-10-26/")
   FetchItemsJson()
 }
 
@@ -64,7 +63,9 @@ func parseHTML(rawHTML string) []CatalogItem {
                                                                         item.ItemName = a.Val
                                                                 }
                                                       }
-                                                    items = append(items, item)
+													  if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" {
+														items = append(items, item)
+													  }
                                                 }
                                                 tokenType = tokenizer.Next()
                                                 token = tokenizer.Token()
