@@ -1,4 +1,3 @@
-//routes for the endpoints
 package main 
 
 import(
