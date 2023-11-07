@@ -20,13 +20,13 @@ func FetchItemsJson(){
 	return c.SendString(ConvertToJson(parseHTML(body)))
   })
 
+  fmt.Println("Server started on port 3000")
+
   err := app.Listen(":3000")
 
   if err != nil {
 	fmt.Println("Error: Failed to start server")
 	fmt.Printf("%s", err)
-  }else{
-	fmt.Println("Server started on port 3000")
   }
 }
 

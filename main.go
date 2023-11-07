@@ -1,8 +1,3 @@
-//future features
-//being able to integrate with discord bots aka making a bot command
-//Add a feature to grab images and display to webhook
-//Add a feature to grab the current likes and dislikes of an item
-
 package main
 
 import (
@@ -19,11 +14,9 @@ type CatalogItem struct {
         ItemUrl      string `json:"item_url"`
 }
 
-
 func main() {
   FetchItemsJson()
 }
-
 
 func parseHTML(rawHTML string) []CatalogItem {
         var items []CatalogItem
@@ -81,7 +74,6 @@ func craftURL(suffix string) string {
 }
 
 func fetchHtml(url string) string {
-        fmt.Println("Fetching HTML from", url)
         resp, err := http.Get(url)
         if err != nil || resp.StatusCode != 200 {
                 fmt.Println("Error: Failed to fetch the HTML from", url)
@@ -96,4 +88,3 @@ func fetchHtml(url string) string {
         }
         return "ERROR"
 }
-
