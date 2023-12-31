@@ -16,6 +16,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-sup-monitor
 
 WORKDIR /sup-monitor
 
-# Command to run the executable
-CMD ["ls", "-la"]
 CMD ["/docker-sup-monitor"]
