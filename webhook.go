@@ -2,15 +2,40 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/webhook"
 )
 
+type webhookcredentials struct {
+	Webhookurl string `json:"webhookurl"`
+}
+
+func fetchCredentials() string {
+	jsonContent, err := os.ReadFile("credentials.json")
+	if err != nil {
+		fmt.Println("Error reading the file:", err)
+		log.Fatal(err)
+	}
+
+	var config webhookcredentials
+
+	err = json.Unmarshal(jsonContent, &config)
+
+	if err != nil {
+		fmt.Println("Error unmarshalling JSON data:", err)
+		log.Fatal(err)
+	}
+
+	return config.Webhookurl
+}
+
 func DumpToDiscord(items []CatalogItem) {
-	fmt.Println("-------WEBHOOK STARTED-------")
-	client, err := webhook.NewWithURL("https://discord.com/api/webhooks/1145495004354187294/YdKt5wog8g60-RIDARmTKdcYURfRbShidx9QjOKBmUqAjamUvJCxcuc9oHP0c1ytgrtu")
+	client, err := webhook.NewWithURL(fetchCredentials())
 	if err != nil {
 		fmt.Println(err, "trouble connecting to webhook")
 		return
@@ -21,6 +46,7 @@ func DumpToDiscord(items []CatalogItem) {
 		embed[0] = discord.Embed{
 			Title:       item.ItemName,
 			Description: item.ItemUrl,
+			Image:       &discord.EmbedResource{URL: item.ItemImg},
 		}
 		sendEmbed, err := client.CreateEmbeds(embed)
 		if err != nil {

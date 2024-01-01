@@ -47,7 +47,6 @@ func parseHTML(rawHTML string) []CatalogItem {
 						if token.Data == "a" {
 							for _, a := range token.Attr {
 								if a.Val == "Go to home" {
-									// Found home tag indicating end of catalog items
 									return items
 								}
 								switch a.Key {

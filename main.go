@@ -9,11 +9,10 @@ func main() {
 	url := os.Args[1:]
 
 	if len(url) == 0 {
-		fmt.Println("Please provide a URL")
+		fmt.Println("No URL provided")
 		return
 	}
 
 	body := fetchHtml(url[0])
-
 	DumpToDiscord(parseHTML(body))
 }
