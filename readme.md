@@ -1,10 +1,9 @@
 # About
-
-Simple web scraper to grab new catalog items from supreme community, given a drop week URL
+Basic web scraper to grab new catalog items from Supreme Community, given a drop week URL with discord webhooks integration. 
 
 # Usage
 
-First modify the credentials.json file and fill in your discord webhook URL. 
+Modify the credentials.json file and fill in your discord webhook URL. 
 
 Ensure all dependencies are installed and run. 
 
