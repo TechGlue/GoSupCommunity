@@ -1,6 +1,8 @@
 # About
 Basic web scraper to grab new catalog items from Supreme Community, given a drop week URL with discord webhooks integration. 
 
+Note: GoSupCommunity is meant for personal use. Please be mindful before sending requests to any server.
+
 # Usage
 
 Modify the credentials.json file with you discord webhook URL. 
