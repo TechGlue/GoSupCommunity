@@ -2,7 +2,7 @@
 ## About
 A small GO project to help familiarize myself with Go's syntax, structure, and libraries. 
 
-What this program does is given a drop week URL, this service scrapes the contents of the provided drop and returns item names, images, and the corresponding URLs in a well-organized JSON response."
+What this program does is given a drop week URL, this service scrapes the contents of the provided drop and returns item names, images, and the corresponding URLs in a well-organized JSON response.
 
 Note: GoSupCommunity is meant for personal use. Please be mindful before sending requests to any server.
 
