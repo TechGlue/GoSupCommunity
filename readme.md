@@ -29,3 +29,5 @@ Note: GoSupCommunity is meant for personal use. Please be mindful before sending
 curl --location 'http://localhost:3000/fetchSup' \
 --form 'url="https://www.supremecommunity.com/season/fall-winter2023/droplist/2023-12-21/"'
 ```
+### Misc. 
+If a service isn't your thing. Checkout the discord webhooks integration that I did. Same functionality different way of delivering the data [discord-webhook](https://github.com/TechGlue/GoSupCommunity/tree/discord-webhook). 
