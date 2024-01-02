@@ -1,39 +1,35 @@
-package main 
+package main
 
-import(
-		"github.com/gofiber/fiber/v2"
-		"fmt"
-		"encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-func FetchItemsJson(){
-  app := fiber.New()
+func FetchItemsJson() {
+	app := fiber.New()
 
-  app.Get("/", func(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!, enpoints are /fetchSup to retrieve all Items for the season provided in the URL")
-  })
+	app.Post("/fetchsup", func(c *fiber.Ctx) error {
+		url := c.FormValue("url")
+		body := fetchHtml(url)
+		return c.SendString(ConvertToJson(parseHTML(body)))
+	})
 
-  app.Post("/fetchsup", func(c *fiber.Ctx) error {
-	url := c.FormValue("url")
-    body := fetchHtml(url)
-	return c.SendString(ConvertToJson(parseHTML(body)))
-  })
+	fmt.Println("Server started on port 3000")
 
-  fmt.Println("Server started on port 3000")
-
-  err := app.Listen(":3000")
-
-  if err != nil {
-	fmt.Println("Error: Failed to start server")
-	fmt.Printf("%s", err)
-  }
+	err := app.Listen(":3000")
+	if err != nil {
+		fmt.Println("Error: Failed to start server")
+		fmt.Printf("%s", err)
+	}
 }
 
-func ConvertToJson( catalogItems []CatalogItem) string{
-  json, err := json.MarshalIndent(catalogItems, "", "  ")
-  if err != nil {
-	fmt.Println("Error: Failed to convert catalogItems to JSON")
-	fmt.Printf("%s", err)
-  }
-  return string(json)
-} 
+func ConvertToJson(catalogItems []CatalogItem) string {
+	json, err := json.MarshalIndent(catalogItems, "", "  ")
+	if err != nil {
+		fmt.Println("Error: Failed to convert catalogItems to JSON")
+		fmt.Printf("%s", err)
+	}
+	return string(json)
+}

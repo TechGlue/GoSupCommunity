@@ -61,7 +61,7 @@ func parseHTML(rawHTML string) []CatalogItem {
 							}
 						}
 						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" {
-							item.ItemImg = craftURL("/" + currentImageURL)
+							item.ItemImg = craftURL(currentImageURL)
 							currentImageURL = ""
 							items = append(items, item)
 							item = CatalogItem{}
