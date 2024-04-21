@@ -12,7 +12,7 @@ func FetchItemsJson() {
 
 	app.Post("/fetchsup", func(c *fiber.Ctx) error {
 		url := c.FormValue("url")
-		body := fetchHtml(url)
+		body := fetchHTML(url)
 		return c.SendString(ConvertToJson(parseHTML(body)))
 	})
 

@@ -14,6 +14,9 @@ type CatalogItem struct {
 	ItemName string `json:"item_name"`
 	ItemUrl  string `json:"item_url"`
 	ItemImg  string `json:"item_img"`
+	ItemPrice float64 `json:"item_price"`
+	ItemUpVotes int `json:"item_upvotes"`
+	ItemDownVotes int `json:"item_downvotes"`
 }
 
 func parseHTML(rawHTML string) []CatalogItem {
@@ -80,7 +83,7 @@ func craftURL(suffix string) string {
 	return "https://www.supremecommunity.com" + suffix
 }
 
-func fetchHtml(url string) string {
+func fetchHTML(url string) string {
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
 		fmt.Println("Error: Failed to fetch the HTML from", url)
