@@ -10,10 +10,10 @@ import (
 )
 
 type CatalogItem struct {
-	ItemId        string  `json:"item_id"`
-	ItemName      string  `json:"item_name"`
-	ItemUrl       string  `json:"item_url"`
-	ItemImg       string  `json:"item_img"`
+	ItemId        string `json:"item_id"`
+	ItemName      string `json:"item_name"`
+	ItemUrl       string `json:"item_url"`
+	ItemImg       string `json:"item_img"`
 	ItemPrice     string `json:"item_price"`
 	ItemUpVotes   string `json:"item_upvotes"`
 	ItemDownVotes string `json:"item_downvotes"`
@@ -50,15 +50,14 @@ func parseHTML(rawHTML string) []CatalogItem {
 
 						if token.Data == "div" {
 							for _, a := range token.Attr {
-
-							  switch a.Key {
+								switch a.Key {
 								case "data-usdprice":
-							  	  item.ItemPrice = a.Val
-								case "data-upvotes":	
-								  item.ItemUpVotes = a.Val
+									item.ItemPrice = a.Val
+								case "data-upvotes":
+									item.ItemUpVotes = a.Val
 								case "data-downvotes":
-								  item.ItemDownVotes = a.Val
-							  }
+									item.ItemDownVotes = a.Val
+								}
 							}
 						}
 
@@ -69,7 +68,7 @@ func parseHTML(rawHTML string) []CatalogItem {
 								}
 								switch a.Key {
 								case "data-usdprice":
-								  fmt.Println("Price: " , a.Val)
+									fmt.Println("Price: ", a.Val)
 								case "href":
 									item.ItemUrl = craftURL(a.Val)
 								case "data-itemid":
@@ -79,10 +78,18 @@ func parseHTML(rawHTML string) []CatalogItem {
 								}
 							}
 						}
-						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" {
+						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" && item.ItemUpVotes != "" && item.ItemDownVotes != "" {
 							item.ItemImg = craftURL(currentImageURL)
-							currentImageURL = ""
+
+							// if no item is currently present then marking price as N/A
+							if item.ItemPrice == "" {
+							  item.ItemPrice = "N/A"
+							}
+
 							items = append(items, item)
+
+							// reset temp variables to defaults 
+							currentImageURL = ""
 							item = CatalogItem{}
 						}
 

@@ -49,8 +49,6 @@ func TestParseHTML_ScrapePricesIfTheyExist(t *testing.T) {
 		if item.ItemDownVotes == "" {
 			t.Errorf("Expected ItemDownVotes to be filled in for %s, got %s", item.ItemName, item.ItemDownVotes)
 		}
-
-		t.Logf("Item: %s, ItemURL: %s, ItemImg: %s,  Price: %s, UpVotes: %s, DownVotes: %s", item.ItemName, item.ItemImg, item.ItemUrl,  item.ItemPrice, item.ItemUpVotes, item.ItemDownVotes)
 	}
 
 	fmt.Println("items loaded: ", len(output))
