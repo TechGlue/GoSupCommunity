@@ -18,7 +18,7 @@ Note: GoSupCommunity is meant for personal use. Please be mindful before sending
 ## Usage
 1. Start the service:
     ```bash
-    ./site-data-scraper-go-service
+    ./GoSupCommunity
     ```
 
 2. Access the API endpoint:
