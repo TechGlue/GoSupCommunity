@@ -81,14 +81,14 @@ func ParseHTML(rawHTML string) []CatalogItem {
 						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" && item.ItemUpVotes != "" && item.ItemDownVotes != "" {
 							item.ItemImg = craftURL(currentImageURL)
 
-							// if no item is currently present then marking price as N/A
+							// If no item is currently present then mark price as N/A
 							if item.ItemPrice == "" {
 							  item.ItemPrice = "N/A"
 							}
 
 							items = append(items, item)
 
-							// reset temp variables to defaults 
+							// Reset temp variables to defaults 
 							currentImageURL = ""
 							item = CatalogItem{}
 						}

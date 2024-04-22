@@ -6,9 +6,7 @@ import (
 	"testing"
 )
 
-//base test is working and fills the que with 15 items
-
-func TestParseHTML_ScrapePricesIfTheyExist(t *testing.T) {
+func TestParseHTML_ScrapeIfTheyExist_AllFieldsFilledIn(t *testing.T) {
 	loadHtml, err := os.ReadFile("./HTMLSamples/sample.html")
 
 	if err != nil {
@@ -25,7 +23,6 @@ func TestParseHTML_ScrapePricesIfTheyExist(t *testing.T) {
 		t.Errorf("Expected 15 items, got %d", len(output))
 	}
 
-	// Testing Testing price parsing
 	for _, item := range output {
 		if item.ItemId == "" {
 			t.Errorf("Expected ItemId to be filled in, got %s", item.ItemId)
