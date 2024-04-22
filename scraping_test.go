@@ -27,7 +27,7 @@ func TestParseHTML_ScrapePricesIfTheyExist(t *testing.T) {
 			t.Errorf("Expected ItemId to be filled in, got %s", item.ItemId)
 		}
 
-		if item.ItemName== "" {
+		if item.ItemName == "" {
 			t.Errorf("Expected ItemName to be filled in, got %s", item.ItemName)
 		}
 
@@ -39,9 +39,18 @@ func TestParseHTML_ScrapePricesIfTheyExist(t *testing.T) {
 			t.Errorf("Expected ItemImg to be filled in, got %s", item.ItemImg)
 		}
 
-		if item.ItemPrice == 0.0 {
-		  t.Errorf("Expected price to be filled in for %s, got %f", item.ItemName, item.ItemPrice)
+		if item.ItemPrice == "0.0" {
+			t.Errorf("Expected price to be filled in for %s, got %s", item.ItemName, item.ItemPrice)
 		}
+
+		if item.ItemUpVotes == "" {
+			t.Errorf("Expected ItemUpVotes to be filled in for %s, got %s", item.ItemName, item.ItemUpVotes)
+		}
+		if item.ItemDownVotes == "" {
+			t.Errorf("Expected ItemDownVotes to be filled in for %s, got %s", item.ItemName, item.ItemDownVotes)
+		}
+
+		t.Logf("Item: %s, ItemURL: %s, ItemImg: %s,  Price: %s, UpVotes: %s, DownVotes: %s", item.ItemName, item.ItemImg, item.ItemUrl,  item.ItemPrice, item.ItemUpVotes, item.ItemDownVotes)
 	}
 
 	fmt.Println("items loaded: ", len(output))

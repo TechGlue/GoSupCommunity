@@ -10,13 +10,13 @@ import (
 )
 
 type CatalogItem struct {
-	ItemId   string `json:"item_id"`
-	ItemName string `json:"item_name"`
-	ItemUrl  string `json:"item_url"`
-	ItemImg  string `json:"item_img"`
-	ItemPrice float64 `json:"item_price"`
-	ItemUpVotes int `json:"item_upvotes"`
-	ItemDownVotes int `json:"item_downvotes"`
+	ItemId        string  `json:"item_id"`
+	ItemName      string  `json:"item_name"`
+	ItemUrl       string  `json:"item_url"`
+	ItemImg       string  `json:"item_img"`
+	ItemPrice     string `json:"item_price"`
+	ItemUpVotes   string `json:"item_upvotes"`
+	ItemDownVotes string `json:"item_downvotes"`
 }
 
 func parseHTML(rawHTML string) []CatalogItem {
@@ -47,13 +47,29 @@ func parseHTML(rawHTML string) []CatalogItem {
 						if token.Data == "img" {
 							currentImageURL = token.Attr[0].Val
 						}
+
+						if token.Data == "div" {
+							for _, a := range token.Attr {
+
+							  switch a.Key {
+								case "data-usdprice":
+							  	  item.ItemPrice = a.Val
+								case "data-upvotes":	
+								  item.ItemUpVotes = a.Val
+								case "data-downvotes":
+								  item.ItemDownVotes = a.Val
+							  }
+							}
+						}
+
 						if token.Data == "a" {
 							for _, a := range token.Attr {
 								if a.Val == "Go to home" {
-									// Found home tag indicating end of catalog items
 									return items
 								}
 								switch a.Key {
+								case "data-usdprice":
+								  fmt.Println("Price: " , a.Val)
 								case "href":
 									item.ItemUrl = craftURL(a.Val)
 								case "data-itemid":
