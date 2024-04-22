@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"GoSupCommunity/scraping"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,8 +13,8 @@ func FetchItemsJson() {
 
 	app.Post("/fetchsup", func(c *fiber.Ctx) error {
 		url := c.FormValue("url")
-		body := fetchHtml(url)
-		return c.SendString(ConvertToJson(parseHTML(body)))
+		body := scraping.FetchHTML(url)
+		return c.SendString(ConvertToJson(scraping.ParseHTML(body)))
 	})
 
 	fmt.Println("Server started on port 3000")
@@ -25,7 +26,7 @@ func FetchItemsJson() {
 	}
 }
 
-func ConvertToJson(catalogItems []CatalogItem) string {
+func ConvertToJson(catalogItems []scraping.CatalogItem) string {
 	json, err := json.MarshalIndent(catalogItems, "", "  ")
 	if err != nil {
 		fmt.Println("Error: Failed to convert catalogItems to JSON")

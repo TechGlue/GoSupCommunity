@@ -1,4 +1,4 @@
-package main
+package scraping 
 
 import (
 	"fmt"
@@ -10,13 +10,16 @@ import (
 )
 
 type CatalogItem struct {
-	ItemId   string `json:"item_id"`
-	ItemName string `json:"item_name"`
-	ItemUrl  string `json:"item_url"`
-	ItemImg  string `json:"item_img"`
+	ItemId        string `json:"item_id"`
+	ItemName      string `json:"item_name"`
+	ItemUrl       string `json:"item_url"`
+	ItemImg       string `json:"item_img"`
+	ItemPrice     string `json:"item_price"`
+	ItemUpVotes   string `json:"item_upvotes"`
+	ItemDownVotes string `json:"item_downvotes"`
 }
 
-func parseHTML(rawHTML string) []CatalogItem {
+func ParseHTML(rawHTML string) []CatalogItem {
 	var items []CatalogItem
 	tokenizer := html.NewTokenizer(strings.NewReader(rawHTML))
 
@@ -44,13 +47,28 @@ func parseHTML(rawHTML string) []CatalogItem {
 						if token.Data == "img" {
 							currentImageURL = token.Attr[0].Val
 						}
+
+						if token.Data == "div" {
+							for _, a := range token.Attr {
+								switch a.Key {
+								case "data-usdprice":
+									item.ItemPrice = a.Val
+								case "data-upvotes":
+									item.ItemUpVotes = a.Val
+								case "data-downvotes":
+									item.ItemDownVotes = a.Val
+								}
+							}
+						}
+
 						if token.Data == "a" {
 							for _, a := range token.Attr {
 								if a.Val == "Go to home" {
-									// Found home tag indicating end of catalog items
 									return items
 								}
 								switch a.Key {
+								case "data-usdprice":
+									fmt.Println("Price: ", a.Val)
 								case "href":
 									item.ItemUrl = craftURL(a.Val)
 								case "data-itemid":
@@ -60,10 +78,18 @@ func parseHTML(rawHTML string) []CatalogItem {
 								}
 							}
 						}
-						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" {
+						if item.ItemId != "" && item.ItemName != "" && item.ItemUrl != "" && currentImageURL != "" && item.ItemUpVotes != "" && item.ItemDownVotes != "" {
 							item.ItemImg = craftURL(currentImageURL)
-							currentImageURL = ""
+
+							// If no item is currently present then mark price as N/A
+							if item.ItemPrice == "" {
+							  item.ItemPrice = "N/A"
+							}
+
 							items = append(items, item)
+
+							// Reset temp variables to defaults 
+							currentImageURL = ""
 							item = CatalogItem{}
 						}
 
@@ -80,7 +106,7 @@ func craftURL(suffix string) string {
 	return "https://www.supremecommunity.com" + suffix
 }
 
-func fetchHtml(url string) string {
+func FetchHTML(url string) string {
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
 		fmt.Println("Error: Failed to fetch the HTML from", url)
