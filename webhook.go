@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 
+	"GoSupCommunity/scraping"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/webhook"
 )
@@ -34,7 +35,7 @@ func fetchCredentials() string {
 	return config.Webhookurl
 }
 
-func DumpToDiscord(items []CatalogItem) {
+func DumpToDiscord(items []scraping.CatalogItem) {
 	client, err := webhook.NewWithURL(fetchCredentials())
 	if err != nil {
 		fmt.Println(err, "trouble connecting to webhook")
@@ -43,10 +44,13 @@ func DumpToDiscord(items []CatalogItem) {
 
 	for _, item := range items {
 		var embed []discord.Embed = make([]discord.Embed, 1)
+
 		embed[0] = discord.Embed{
 			Title:       item.ItemName,
-			Description: item.ItemUrl,
-			Image:       &discord.EmbedResource{URL: item.ItemImg},
+			Image:       &discord.EmbedResource{URL: item.ItemImg, ProxyURL: item.ItemUrl},
+			URL:         item.ItemUrl,
+			Description: fmt.Sprintf("Price (USD): %s\nUpvotes :arrow_up: : %s\nDownvotes :arrow_down: : %s", item.ItemPrice, item.ItemUpVotes, item.ItemDownVotes),
+			Color:       0xad6f49,
 		}
 		sendEmbed, err := client.CreateEmbeds(embed)
 		if err != nil {

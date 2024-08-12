@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"GoSupCommunity/scraping"
 )
 
 func main() {
@@ -13,6 +14,6 @@ func main() {
 		return
 	}
 
-	body := fetchHtml(url[0])
-	DumpToDiscord(parseHTML(body))
+	body := scraping.FetchHTML(url[0])
+	DumpToDiscord(scraping.ParseHTML(body))
 }
